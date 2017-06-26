@@ -49,6 +49,21 @@ public class Pool_Tab extends Fragment {
 
         new SetTemperatures().execute("");
 
+        ImageButton ibAirTemp = (ImageButton) rootView.findViewById(R.id.ibAirTemp);
+        ibAirTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SetTemperatures().execute("");
+            }
+        });
+        ImageButton ibWaterTemp = (ImageButton) rootView.findViewById(R.id.ibWaterTemp);
+        ibWaterTemp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new SetTemperatures().execute("");
+            }
+        });
+
         ImageButton btnLightOn = (ImageButton) rootView.findViewById(R.id.btnLightOn);
         btnLightOn.setOnClickListener(new View.OnClickListener() {
             @Override
