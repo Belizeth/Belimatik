@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="client_id">594a8ea06d1dbd232e8b4a7e</string>
+    <string name="client_secret">DK83ucd6a3VzULdg7ZtGhoaJwKOAJVfsiEIY8</string>
+    <string name="app_scope"></string>
+    <string name="netatmo_user">hannes.peham@aon.at</string>
+    <string name="netatmo_pwd">h>>2[TTE7E&lt;N7#^</string>
+</resources>
