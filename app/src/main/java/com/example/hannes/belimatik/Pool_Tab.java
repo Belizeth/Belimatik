@@ -1,8 +1,10 @@
 package com.example.hannes.belimatik;
 
+import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +20,7 @@ import com.tinkerforge.IPConnection;
 
 /**
  * Created by Hannes on 13.06.2017.
+ * Fragmentprogramm für Pool View
  */
 
 public class Pool_Tab extends Fragment {
@@ -31,6 +34,7 @@ public class Pool_Tab extends Fragment {
     private TextView tvAmbTemp;
     private TextView tvWaterTempAblauf;
     private boolean poolTempgetOk = false;
+    private int errorCode = 0;
 
 
 
@@ -48,21 +52,6 @@ public class Pool_Tab extends Fragment {
 
 
         new SetTemperatures().execute("");
-
-        ImageButton ibAirTemp = (ImageButton) rootView.findViewById(R.id.ibAirTemp);
-        ibAirTemp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SetTemperatures().execute("");
-            }
-        });
-        ImageButton ibWaterTemp = (ImageButton) rootView.findViewById(R.id.ibWaterTemp);
-        ibWaterTemp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new SetTemperatures().execute("");
-            }
-        });
 
         ImageButton btnLightOn = (ImageButton) rootView.findViewById(R.id.btnLightOn);
         btnLightOn.setOnClickListener(new View.OnClickListener() {
@@ -113,8 +102,11 @@ public class Pool_Tab extends Fragment {
                     ipcon.disconnect();
                     poolTempgetOk = true;
                 } catch (Exception e) {
-
                     Log.i(TAG, "pj_" + count + ":::" + e);
+
+                    if (count >= 5) {
+                        errorCode = 1;
+                    }
                 }
             }
             return null;
@@ -122,8 +114,12 @@ public class Pool_Tab extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+            if (errorCode == 1){
+               showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true);
+            }
             tvWaterTempAblauf.setText("" + waterTempAblauf/100.0 + " °C");
             tvAmbTemp.setText("" + ambjTemp/10.0 + " °C");
+            Log.i(TAG, "pj_temp gesetzt " + waterTempAblauf/100.0 + " ::: " + ambjTemp/10.0);
         }
 
         @Override
@@ -137,7 +133,7 @@ public class Pool_Tab extends Fragment {
 
     private class SendLightOrder extends AsyncTask<String, Void, String> {
         private  String switchOrder;
-        public SendLightOrder(String order){
+        private SendLightOrder(String order){
             super();
            switchOrder = order;
         }
@@ -146,18 +142,22 @@ public class Pool_Tab extends Fragment {
 
             try {
                 ipcon.connect(getString(R.string.host_pool), getContext().getResources().getInteger(R.integer.port_pool));
-                if (switchOrder == "On") {
-                    rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_ON);
-                } else if (switchOrder == "Off"){
-                    rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_OFF);
-                } else if (switchOrder == "NextColor"){
-                    rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_OFF);
-                    Thread.sleep(600);
-                    rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_ON);
-                }
+                switch (switchOrder){
+                    case "On":
+                        rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_ON);
+                        break;
+                    case "Off":
+                        rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_OFF);
+                        break;
+                    case "NextColor":
+                        rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_OFF);
+                        Thread.sleep(600);
+                        rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_ON);
+                        break;
+                    }
                 ipcon.disconnect();
             } catch (Exception e) {
-
+                showMsg("Fehler", "Beim Schalten ist ein Fehler aufgetreten! \n" + e, false);
                 Log.i(TAG, "pj_" + ":::" + e);
             }
 
@@ -178,5 +178,24 @@ public class Pool_Tab extends Fragment {
         protected void onProgressUpdate(Void... values) {
         }
     }
+    private void showMsg(String title, String msg, final boolean endProgramm){
+        //< Message erstellen >
+        AlertDialog.Builder showMsg = new AlertDialog.Builder(getActivity());
+        showMsg.setTitle(title);
+        showMsg.setMessage(msg);
+        showMsg.setPositiveButton("Ok",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (endProgramm) {
+                            System.exit(99);//dismiss the dialog
+                        }
+                    }
+                });
+        showMsg.setCancelable(true);
+
+        AlertDialog msgDialog = showMsg.create();
+        msgDialog.show();
+    }
+
 
 }
