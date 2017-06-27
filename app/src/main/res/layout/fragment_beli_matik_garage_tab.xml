@@ -7,22 +7,17 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/colorLightBlue"
     tools:context="com.example.hannes.belimatik.BeliMatikActivity">
 
-    <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/closed"
+    <ImageButton
+        android:id="@+id/imageButton2"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
-
-    <ImageView
-        android:id="@+id/imageView4"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/coming_soon"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="10dp" />
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="86dp"
+        android:background="@android:color/transparent"
+        android:scaleType="fitXY"
+        app:srcCompat="@drawable/garage_state_clicked_closed" />
 </RelativeLayout>
