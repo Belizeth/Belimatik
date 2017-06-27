@@ -29,8 +29,9 @@
         android:textColor="@android:color/white"
         android:textSize="60sp"
         android:layout_alignTop="@+id/imageView7"
-        android:layout_alignStart="@+id/WaterTempAblaufView"
-        android:layout_alignBottom="@+id/imageView7" />
+        android:layout_alignBottom="@+id/imageView7"
+        android:layout_alignParentEnd="true"
+        android:layout_toEndOf="@+id/textView2" />
 
     <TextView
         android:id="@+id/WaterTempAblaufView"
@@ -43,10 +44,10 @@
         android:textAppearance="@android:style/TextAppearance.Holo.Large"
         android:textColor="@android:color/white"
         android:textSize="60sp"
-        android:layout_marginStart="72dp"
         android:layout_alignParentTop="true"
-        android:layout_toEndOf="@+id/imageView5"
-        android:layout_alignBottom="@+id/imageView5" />
+        android:layout_alignParentEnd="true"
+        android:layout_alignStart="@+id/PoolAirTempView"
+        android:layout_above="@+id/PoolAirTempView" />
 
     <ImageView
         android:id="@+id/imageView5"
@@ -70,12 +71,11 @@
         android:id="@+id/btnLightOn"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:layout_marginTop="19dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
         app:srcCompat="@drawable/state_power"
-        android:layout_below="@+id/view"
-        android:layout_toStartOf="@+id/btnLightOff" />
+        android:layout_centerVertical="true"
+        android:layout_alignStart="@+id/PoolAirTempView" />
 
     <ImageButton
         android:id="@+id/btnLightOff"
@@ -85,7 +85,7 @@
         android:scaleType="fitXY"
         app:srcCompat="@drawable/state_power_rev"
         android:layout_alignTop="@+id/btnLightOn"
-        android:layout_alignParentEnd="true" />
+        android:layout_toEndOf="@+id/btnLightOn" />
 
     <ImageButton
         android:id="@+id/btnLightNextColor"
@@ -104,20 +104,19 @@
         android:text="Beleuchtung"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_alignBottom="@+id/btnLightOff"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="19dp" />
+        android:layout_centerVertical="true"
+        android:layout_alignParentStart="true" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="29dp"
         android:text="Nächste Farbe"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_alignBottom="@+id/btnLightNextColor"
-        android:layout_alignParentStart="true" />
+        android:layout_below="@+id/btnLightOn"
+        android:layout_alignParentStart="true"
+        android:layout_marginTop="39dp" />
 
 
 </RelativeLayout>
