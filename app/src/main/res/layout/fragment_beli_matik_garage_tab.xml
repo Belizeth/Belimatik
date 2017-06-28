@@ -19,28 +19,28 @@
         android:layout_marginTop="86dp"
         android:background="@android:color/transparent"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/garage_state_clicked_closed" />
+        app:srcCompat="@drawable/state_garage" />
 
     <TextView
         android:id="@+id/tvDistance"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="41dp"
-        android:layout_marginTop="119dp"
-        android:text="@string/undifined"
-        android:textColor="@android:color/white"
-        android:textSize="24sp"
-        android:layout_below="@+id/ibGarageAktor"
-        android:layout_alignStart="@+id/ibGarageAktor" />
-
-    <TextView
-        android:id="@+id/tvTimer"
         android:layout_width="300dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="74dp"
         android:text="TextView"
         android:textColor="@android:color/white"
         android:textSize="24sp"
-        android:layout_below="@+id/tvDistance"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@+id/tvTimer"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="61dp" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/tvDistance"
+        android:layout_alignStart="@+id/tvDistance"
+        android:layout_centerVertical="true"
+        android:layout_marginStart="17dp"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="24sp" />
 </RelativeLayout>

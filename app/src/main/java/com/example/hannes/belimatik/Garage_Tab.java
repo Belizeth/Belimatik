@@ -5,6 +5,7 @@ package com.example.hannes.belimatik;
  */
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -18,18 +19,22 @@ import com.tinkerforge.BrickletDistanceUS;
 import com.tinkerforge.BrickletDualRelay;
 import com.tinkerforge.BrickletTemperatureIR;
 import com.tinkerforge.IPConnection;
+import com.tinkerforge.NotConnectedException;
 
 public class Garage_Tab extends Fragment {
 
     private String TAG;
     private int errorCode = 0;
     private boolean poolGarageAktuateOk = false;
+    private boolean poolGarageDistanceOk = false;
     private IPConnection ipcon_garage;
+    private IPConnection ipcon_distance;
     private BrickletDualRelay dr;
     private BrickletDistanceUS dus;
     private Functions functions = new Functions();
     private TextView tvDistance;
     private TextView tvTimer;
+
 
 
     @Override
@@ -39,8 +44,9 @@ public class Garage_Tab extends Fragment {
 
         TAG = "PJ_onCreateView";
         ipcon_garage = new IPConnection();
+        ipcon_distance = new IPConnection();
         dr = new BrickletDualRelay(getString(R.string.uid_garage_dual_relay), ipcon_garage);
-        dus = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_US), ipcon_garage);
+        dus = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_US), ipcon_distance);
         tvDistance = (TextView) rootView.findViewById(R.id.tvDistance);
         tvTimer = (TextView) rootView.findViewById(R.id.tvTimer);
 
@@ -49,28 +55,53 @@ public class Garage_Tab extends Fragment {
             @Override
             public void onClick(View v) {
                 new AktuateGarage().execute("");
-                try {
-                    dus.setDistanceCallbackPeriod(200);
-                    dus.addDistanceListener(new BrickletDistanceUS.DistanceListener() {
-                        public void distance(int distance) {
-                            tvDistance.setText(distance);
-                        }
+                poolGarageAktuateOk = false;
+                new DistanceMeasure().execute("");
+                poolGarageDistanceOk = false;
+
+
+
+
+
+                dus.addDistanceListener(new BrickletDistanceUS.DistanceListener() {
+                    public void distance(int distance) {
+                        //Log.i(TAG, "PJ_setDistance: " + distance);
+                        final int localDistance = distance;
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                try {
+                                    tvDistance.setText("geht eh " + localDistance);
+                                    new CountDownTimer(10000, 1000) {
+                                        public void onTick(long millisUntilFinished) {
+                                        }
+
+                                        public void onFinish() {
+                                            try {
+                                                Log.i(TAG, "PJ_Disconnect: ");
+                                                ipcon_distance.disconnect();
+
+                                            } catch (NotConnectedException nc) {
+                                                Log.i(TAG, "PJ_NotConnected: " + nc);
+                                            }
+                                        }
+                                        //todo timer einbauen
+                                    }.start();
+
+                                } catch (Exception e) {
+                                    Log.i(TAG, "PJ_setDistanceFehler: " + e);
+                                }
+                            }
                     });
-                } catch (Exception e){
-                    Log.i(TAG, "PJ_da hats was "+ e);
-                }
-                new CountDownTimer(30000, 1000) {
-                    public void onTick(long millisUntilFinished) {
-                        tvTimer.setText("seconds remaining: " + millisUntilFinished / 1000);
+
+                        //Log.i(TAG, "PJ_distgesetzt: " + distance);
                     }
-                    public void onFinish() {
-                        try {
-                            ipcon_garage.disconnect();
-                        } catch (Exception e){
-                            Log.i(TAG, "PJ_ui do hots wos::: " + e);
-                        }
-                    }
-                }.start();
+
+                    });
+
+
+
+
                 Log.i(TAG, "PJ_clicked on garageopen");
             }
         });
@@ -85,9 +116,10 @@ public class Garage_Tab extends Fragment {
             int maxtries = 5;
             while (!poolGarageAktuateOk && count++ < maxtries) {
                 try {
-                    ipcon_garage.connect(getString(R.string.host_pool), getContext().getResources().getInteger(R.integer.port_pool));
+                    ipcon_garage.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
                     dr.setMonoflop((short) 1, true, (long) 500);
-                    //ipcon.disconnect();
+
+                    ipcon_garage.disconnect();
                     poolGarageAktuateOk = true;
                 } catch (Exception e) {
                     Log.i(TAG, "pj_" + count + ":::" + e);
@@ -117,4 +149,61 @@ public class Garage_Tab extends Fragment {
         protected void onProgressUpdate(Void... values) {
         }
     }
+
+
+
+    private class DistanceMeasure extends AsyncTask<String, Void, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            int count = 0;
+            int maxtries = 5;
+            Log.i(TAG, "PJ_distanceMeasure");
+            Log.i(TAG, "poolgarageaktuate " + poolGarageAktuateOk);
+            while (!poolGarageDistanceOk && count++ < maxtries) {
+                try {
+                    Log.i(TAG, "PJ_while");
+                    ipcon_distance.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
+
+
+                    //ipcon_garage.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
+                    dus.setDistanceCallbackPeriod(200);
+                    Log.i(TAG, "PJ_setDistanceCallPer");
+
+
+                    //ipcon_garage.disconnect();
+                    poolGarageDistanceOk = true;
+                } catch (Exception e) {
+                    Log.i(TAG, "pj_" + count + ":::" + e);
+
+                    if (count >= 5) {
+                        errorCode = 1;
+                    }
+                }
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+
+
+
+            if (errorCode == 1){
+                functions.showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true, getActivity());
+            }
+
+
+        }
+
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected void onProgressUpdate(Void... values) {
+        }
+    }
+
+
+
 }

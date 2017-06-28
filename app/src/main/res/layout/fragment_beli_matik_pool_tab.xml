@@ -53,6 +53,7 @@
         android:layout_toStartOf="@+id/btnLightOff"
         android:background="@android:color/transparent"
         android:contentDescription="@string/imgBtnLightOn"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/state_power" />
 
     <ImageButton
@@ -64,6 +65,7 @@
         android:layout_toEndOf="@+id/btnLightNextColor"
         android:background="@android:color/transparent"
         android:contentDescription="@string/imgBtnLightOff"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/state_power_rev" />
 
     <ImageButton
@@ -75,6 +77,7 @@
         android:layout_marginBottom="108dp"
         android:background="@android:color/transparent"
         android:contentDescription="@string/imgBtnLightNextColor"
+        android:scaleType="fitXY"
         app:srcCompat="@drawable/state_next" />
 
     <TextView
