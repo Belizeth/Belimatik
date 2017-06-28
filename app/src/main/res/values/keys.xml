@@ -5,4 +5,15 @@
     <string name="app_scope"></string>
     <string name="netatmo_user">hannes.peham@aon.at</string>
     <string name="netatmo_pwd">h>>2[TTE7E&lt;N7#^</string>
+
+    <string name="host_pool">192.168.178.50</string>
+    <string name="host_Garage">192.168.178.54</string>
+    <integer name="port_pool">4223</integer>
+    <integer name="port_garage">4223</integer>
+    <string name="uid_pool_amb">oeZ</string>
+    <string name="uid_pool_ptc">yX8</string>
+    <string name="uid_pool_rs">nWL</string>
+    <string name="uid_pool_water_ablauf">yX8</string>
+    <string name="uid_garage_dual_relay">4711</string>
+    <string name="uid_garage_Distance_US">4711</string>
 </resources>

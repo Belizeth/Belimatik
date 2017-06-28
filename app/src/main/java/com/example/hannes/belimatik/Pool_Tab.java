@@ -35,6 +35,7 @@ public class Pool_Tab extends Fragment {
     private TextView tvWaterTempAblauf;
     private boolean poolTempgetOk = false;
     private int errorCode = 0;
+    private Functions functions = new Functions();
 
 
 
@@ -47,8 +48,8 @@ public class Pool_Tab extends Fragment {
         tvAmbTemp = (TextView) rootView.findViewById(R.id.PoolAirTempView);
         ipcon = new IPConnection();
         tir = new BrickletTemperatureIR(getString(R.string.uid_pool_amb), ipcon);
-        ptc = new BrickletPTC("yX8", ipcon);
-        rs = new BrickletRemoteSwitch("nWL", ipcon);
+        ptc = new BrickletPTC(getString(R.string.uid_pool_ptc), ipcon);
+        rs = new BrickletRemoteSwitch(getString(R.string.uid_pool_rs), ipcon);
 
 
         new SetTemperatures().execute("");
@@ -115,7 +116,7 @@ public class Pool_Tab extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             if (errorCode == 1){
-               showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true);
+               functions.showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true, getActivity());
             }
             tvWaterTempAblauf.setText("" + waterTempAblauf/100.0 + " °C");
             tvAmbTemp.setText("" + ambjTemp/10.0 + " °C");
@@ -157,7 +158,7 @@ public class Pool_Tab extends Fragment {
                     }
                 ipcon.disconnect();
             } catch (Exception e) {
-                showMsg("Fehler", "Beim Schalten ist ein Fehler aufgetreten! \n" + e, false);
+                functions.showMsg("Fehler", "Beim Schalten ist ein Fehler aufgetreten! \n" + e, false, getActivity());
                 Log.i(TAG, "pj_" + ":::" + e);
             }
 
@@ -178,24 +179,4 @@ public class Pool_Tab extends Fragment {
         protected void onProgressUpdate(Void... values) {
         }
     }
-    private void showMsg(String title, String msg, final boolean endProgramm){
-        //< Message erstellen >
-        AlertDialog.Builder showMsg = new AlertDialog.Builder(getActivity());
-        showMsg.setTitle(title);
-        showMsg.setMessage(msg);
-        showMsg.setPositiveButton("Ok",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (endProgramm) {
-                            System.exit(99);//dismiss the dialog
-                        }
-                    }
-                });
-        showMsg.setCancelable(true);
-
-        AlertDialog msgDialog = showMsg.create();
-        msgDialog.show();
-    }
-
-
 }
