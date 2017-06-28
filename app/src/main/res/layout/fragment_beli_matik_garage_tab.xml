@@ -32,4 +32,15 @@
         android:textSize="24sp"
         android:layout_below="@+id/ibGarageAktor"
         android:layout_alignStart="@+id/ibGarageAktor" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="74dp"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:layout_below="@+id/tvDistance"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
