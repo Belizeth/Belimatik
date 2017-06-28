@@ -10,113 +10,113 @@
     android:background="@color/colorLightBlue"
     tools:context="com.example.hannes.belimatik.BeliMatikActivity">
 
-    <ImageView
-        android:id="@+id/imageView7"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_weight="0.71"
-        app:srcCompat="@drawable/air_temp"
-        android:layout_below="@+id/imageView5"
-        android:layout_alignParentStart="true" />
-
     <TextView
         android:id="@+id/PoolAirTempView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Zzzz"
+        android:layout_alignStart="@+id/WaterTempAblaufView"
+        android:layout_below="@+id/WaterTempAblaufView"
+        android:layout_marginTop="29dp"
+        android:text="@string/undifined"
         android:textAlignment="center"
         android:textAppearance="@android:style/TextAppearance.Holo.Large"
         android:textColor="@android:color/white"
-        android:textSize="60sp"
-        android:layout_alignTop="@+id/imageView7"
-        android:layout_alignBottom="@+id/imageView7"
-        android:layout_alignParentEnd="true"
-        android:layout_toEndOf="@+id/textView2" />
+        android:textSize="60sp" />
 
     <TextView
         android:id="@+id/WaterTempAblaufView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:elevation="0dp"
-        android:text="Zzzz"
+        android:text="@string/undifined"
         android:textAlignment="center"
         android:textAllCaps="false"
         android:textAppearance="@android:style/TextAppearance.Holo.Large"
         android:textColor="@android:color/white"
         android:textSize="60sp"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignStart="@+id/PoolAirTempView"
-        android:layout_above="@+id/PoolAirTempView" />
-
-    <ImageView
-        android:id="@+id/imageView5"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:layout_weight="0.02"
-        app:srcCompat="@drawable/water_temp"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignStart="@+id/btnLightOn" />
 
     <View
         style="@style/StrongDivider"
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="210dp"
-        android:layout_alignParentEnd="true"
+        android:layout_marginTop="200dp"
         android:id="@+id/view" />
 
     <ImageButton
         android:id="@+id/btnLightOn"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/state_power"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_centerVertical="true"
-        android:layout_alignStart="@+id/PoolAirTempView" />
+        android:layout_toStartOf="@+id/btnLightOff"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/imgBtnLightOn"
+        app:srcCompat="@drawable/state_power" />
 
     <ImageButton
         android:id="@+id/btnLightOff"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
-        android:background="@android:color/transparent"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/state_power_rev"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignTop="@+id/btnLightOn"
-        android:layout_toEndOf="@+id/btnLightOn" />
+        android:layout_marginStart="26dp"
+        android:layout_toEndOf="@+id/btnLightNextColor"
+        android:background="@android:color/transparent"
+        android:contentDescription="@string/imgBtnLightOff"
+        app:srcCompat="@drawable/state_power_rev" />
 
     <ImageButton
         android:id="@+id/btnLightNextColor"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="108dp"
         android:background="@android:color/transparent"
-        android:scaleType="fitXY"
-        app:srcCompat="@drawable/state_next"
-        android:layout_below="@+id/btnLightOn"
-        android:layout_alignStart="@+id/btnLightOn" />
+        android:contentDescription="@string/imgBtnLightNextColor"
+        app:srcCompat="@drawable/state_next" />
 
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Beleuchtung"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/btnLightOn"
+        android:layout_marginTop="28dp"
+        android:text="@string/LabelBeleuchtung"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:layout_centerVertical="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignEnd="@+id/textView2" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Nächste Farbe"
-        android:textColor="@android:color/white"
-        android:textSize="18sp"
-        android:layout_below="@+id/btnLightOn"
         android:layout_alignParentStart="true"
-        android:layout_marginTop="39dp" />
+        android:layout_alignTop="@+id/btnLightNextColor"
+        android:layout_marginTop="28dp"
+        android:text="@string/LabelNextColor"
+        android:textColor="@android:color/white"
+        android:textSize="18sp" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="77dp"
+        android:layout_height="77dp"
+        android:layout_alignBottom="@+id/WaterTempAblaufView"
+        android:layout_alignEnd="@+id/textView"
+        android:contentDescription="@string/imgWaterTemp"
+        app:srcCompat="@drawable/water_temp" />
+
+    <ImageView
+        android:id="@+id/imageView3"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_alignStart="@+id/imageView2"
+        android:layout_alignTop="@+id/PoolAirTempView"
+        android:contentDescription="@string/imgAirTemp"
+        app:srcCompat="@drawable/air_temp" />
 
 
 </RelativeLayout>

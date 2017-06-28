@@ -2,8 +2,13 @@
     <string name="app_name">Belimatik</string>
     <string name="action_settings">Settings</string>
     <string name="section_format">Hello World from section: %1$d</string>
-    <string name="host_pool">192.168.178.50</string>
-    <string name="uid_pool_amb">oeZ</string>
-    <string name="uid_pool_water_ablauf">yX8</string>
-    <string name="GarageImageBtn">Garage Image Button</string>
+
+    <string name="undifined">Zzzz</string>
+    <string name="LabelBeleuchtung">Beleuchtung</string>
+    <string name="LabelNextColor">Nächste Farbe</string>
+    <string name="imgAirTemp">Lufttemperatur</string>
+    <string name="imgWaterTemp">Wassertemperatur</string>
+    <string name="imgBtnLightOn">Licht an</string>
+    <string name="imgBtnLightOff">Licht aus</string>
+    <string name="imgBtnLightNextColor">Licht naächste Farbe</string>
 </resources>

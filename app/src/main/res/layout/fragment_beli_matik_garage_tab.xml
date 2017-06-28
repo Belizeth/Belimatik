@@ -11,14 +11,36 @@
     tools:context="com.example.hannes.belimatik.BeliMatikActivity">
 
     <ImageButton
-        android:id="@+id/imageButton"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:id="@+id/ibGarageAktor"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="48dp"
+        android:layout_marginTop="86dp"
         android:background="@android:color/transparent"
-        android:contentDescription="@string/GarageImageBtn"
         android:scaleType="fitXY"
-        app:srcCompat="@drawable/state_garage" />
+        app:srcCompat="@drawable/garage_state_clicked_closed" />
+
+    <TextView
+        android:id="@+id/tvDistance"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="41dp"
+        android:layout_marginTop="119dp"
+        android:text="@string/undifined"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:layout_below="@+id/ibGarageAktor"
+        android:layout_alignStart="@+id/ibGarageAktor" />
+
+    <TextView
+        android:id="@+id/tvTimer"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="74dp"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="24sp"
+        android:layout_below="@+id/tvDistance"
+        android:layout_centerHorizontal="true" />
 </RelativeLayout>
