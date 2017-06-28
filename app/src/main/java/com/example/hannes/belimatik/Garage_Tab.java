@@ -59,13 +59,34 @@ public class Garage_Tab extends Fragment {
                 new DistanceMeasure().execute("");
                 poolGarageDistanceOk = false;
 
+                tvDistance.setText("doing");
 
 
 
+                new CountDownTimer(10000, 1000) {
+                    public void onTick(long millisUntilFinished) {
 
-                dus.addDistanceListener(new BrickletDistanceUS.DistanceListener() {
-                    public void distance(int distance) {
+                        Log.i(TAG, "PJ_tinmer: " + millisUntilFinished / 1000);
+                    }
+
+                    public void onFinish() {
+                        try {
+                            Log.i(TAG, "PJ_Disconnect: ");
+                            ipcon_distance.disconnect();
+                            tvDistance.setText("done");
+
+                        } catch (NotConnectedException nc) {
+                            Log.i(TAG, "PJ_NotConnected: " + nc);
+                        }
+                    }
+                    //todo timer einbauen
+                }.start();
+
+
+
                         //Log.i(TAG, "PJ_setDistance: " + distance);
+
+                    /*
                         final int localDistance = distance;
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
@@ -98,7 +119,7 @@ public class Garage_Tab extends Fragment {
                     }
 
                     });
-
+*/
 
 
 
@@ -134,6 +155,8 @@ public class Garage_Tab extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+
+
             if (errorCode == 1){
                 functions.showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true, getActivity());
             }
@@ -185,7 +208,11 @@ public class Garage_Tab extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-
+            dus.addDistanceListener(new BrickletDistanceUS.DistanceListener() {
+                public void distance(int distance) {
+                    tvDistance.setText(distance);
+                }
+            });
 
 
             if (errorCode == 1){
