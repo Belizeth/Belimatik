@@ -94,7 +94,7 @@ public class Garage_Tab extends Fragment {
 
                 //tvDistance.setText("Tor läuft");
                 isTimerRunning = true;
-                cTimer = new CountDownTimer(10000, 1000) {
+                cTimer = new CountDownTimer(25000, 1000) {
                     public void onTick(long millisUntilFinished) {
                         Log.i(TAG, "PJ_tinmer: " + millisUntilFinished / 1000);
 
@@ -217,7 +217,7 @@ public class Garage_Tab extends Fragment {
     }
 
 private void setStatus(){
-    if (distance < 1400){
+    if (distance < 400){
         tvStatus.setText("Tor geöffnet");
     } else if (distance > 2000){
         tvStatus.setText("Tor geschlossen");
@@ -226,7 +226,7 @@ private void setStatus(){
     }
 }
     private void setStatusRunning(){
-        if (distance < 1400){
+        if (distance < 400){
             tvStatus.setText("Tor geöffnet");
         } else if (distance > 2000){
             tvStatus.setText("Tor geschlossen");
