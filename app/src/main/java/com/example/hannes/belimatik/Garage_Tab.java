@@ -5,7 +5,6 @@ package com.example.hannes.belimatik;
  */
 import android.os.AsyncTask;
 import android.os.CountDownTimer;
-import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,27 +12,30 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.tinkerforge.BrickletDistanceUS;
 import com.tinkerforge.BrickletDualRelay;
-import com.tinkerforge.BrickletTemperatureIR;
 import com.tinkerforge.IPConnection;
-import com.tinkerforge.NotConnectedException;
 
 public class Garage_Tab extends Fragment {
 
     private String TAG;
     private int errorCode = 0;
-    private boolean poolGarageAktuateOk = false;
-    private boolean poolGarageDistanceOk = false;
+    private boolean garageAktuateOk = false;
+    private boolean garageDistanceOk = false;
     private IPConnection ipcon_garage;
     private IPConnection ipcon_distance;
     private BrickletDualRelay dr;
     private BrickletDistanceUS dus;
     private Functions functions = new Functions();
     private TextView tvDistance;
-    private TextView tvTimer;
+    private TextView tvStatus;
+    private int distance;
+    private CountDownTimer cTimer;
+    private boolean isTimerRunning = false;
+    private ProgressBar garagePB;
 
 
 
@@ -48,80 +50,69 @@ public class Garage_Tab extends Fragment {
         dr = new BrickletDualRelay(getString(R.string.uid_garage_dual_relay), ipcon_garage);
         dus = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_US), ipcon_distance);
         tvDistance = (TextView) rootView.findViewById(R.id.tvDistance);
-        tvTimer = (TextView) rootView.findViewById(R.id.tvTimer);
+        tvStatus = (TextView) rootView.findViewById(R.id.tvStatus);
+        garagePB = (ProgressBar) rootView.findViewById(R.id.garageProgressBar);
+
+        new DistanceMeasure().execute("");
+        garageDistanceOk = false;
+
+        ImageButton btnCheckDistance = (ImageButton) rootView.findViewById(R.id.ibCheckDistance);
+        btnCheckDistance.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                tvDistance.setText("Messung läuft");
+                tvStatus.setText("Messung läuft");
+                new DistanceMeasure().execute("");
+                garageDistanceOk = false;
+            }
+
+            });
+
 
         ImageButton btnGarageAktor = (ImageButton) rootView.findViewById(R.id.ibGarageAktor);
         btnGarageAktor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new AktuateGarage().execute("");
-                poolGarageAktuateOk = false;
+                garagePB.setVisibility(View.VISIBLE);
+                if (isTimerRunning){
+                    cTimer.cancel();
+                    isTimerRunning = false;
+                    new AktuateGarage().execute("");
+                    garageAktuateOk = false;
+                    new DistanceMeasure().execute("");
+                    garageDistanceOk = false;
+                    tvDistance.setText("Distance " + distance);
+                    tvStatus.setText("Unterbrochen");
+
+                    garagePB.setVisibility(View.GONE);
+                    return;
+                }
                 new DistanceMeasure().execute("");
-                poolGarageDistanceOk = false;
+                garageDistanceOk = false;
+                new AktuateGarage().execute("");
+                garageAktuateOk = false;
 
-                tvDistance.setText("doing");
-
-
-
-                new CountDownTimer(10000, 1000) {
+                //tvDistance.setText("Tor läuft");
+                isTimerRunning = true;
+                cTimer = new CountDownTimer(10000, 1000) {
                     public void onTick(long millisUntilFinished) {
-
                         Log.i(TAG, "PJ_tinmer: " + millisUntilFinished / 1000);
-                    }
 
+                        new DistanceMeasure().execute("");
+                        garageDistanceOk = false;
+                    }
                     public void onFinish() {
-                        try {
-                            Log.i(TAG, "PJ_Disconnect: ");
-                            ipcon_distance.disconnect();
-                            tvDistance.setText("done");
+                        isTimerRunning = false;
+                        new DistanceMeasure().execute("");
+                        garageDistanceOk = false;
+                        Log.i(TAG, "PJ_stopdist: " + distance);
 
-                        } catch (NotConnectedException nc) {
-                            Log.i(TAG, "PJ_NotConnected: " + nc);
-                        }
+                        isTimerRunning = false;
+                        garagePB.setVisibility(View.GONE);
                     }
-                    //todo timer einbauen
-                }.start();
-
-
-
-                        //Log.i(TAG, "PJ_setDistance: " + distance);
-
-                    /*
-                        final int localDistance = distance;
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                try {
-                                    tvDistance.setText("geht eh " + localDistance);
-                                    new CountDownTimer(10000, 1000) {
-                                        public void onTick(long millisUntilFinished) {
-                                        }
-
-                                        public void onFinish() {
-                                            try {
-                                                Log.i(TAG, "PJ_Disconnect: ");
-                                                ipcon_distance.disconnect();
-
-                                            } catch (NotConnectedException nc) {
-                                                Log.i(TAG, "PJ_NotConnected: " + nc);
-                                            }
-                                        }
-                                        //todo timer einbauen
-                                    }.start();
-
-                                } catch (Exception e) {
-                                    Log.i(TAG, "PJ_setDistanceFehler: " + e);
-                                }
-                            }
-                    });
-
-                        //Log.i(TAG, "PJ_distgesetzt: " + distance);
-                    }
-
-                    });
-*/
-
-
+                };
+                cTimer.start();
+                isTimerRunning = true;
 
                 Log.i(TAG, "PJ_clicked on garageopen");
             }
@@ -135,13 +126,13 @@ public class Garage_Tab extends Fragment {
         protected String doInBackground(String... params) {
             int count = 0;
             int maxtries = 5;
-            while (!poolGarageAktuateOk && count++ < maxtries) {
+            while (!garageAktuateOk && count++ < maxtries) {
                 try {
                     ipcon_garage.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
                     dr.setMonoflop((short) 1, true, (long) 500);
 
                     ipcon_garage.disconnect();
-                    poolGarageAktuateOk = true;
+                    garageAktuateOk = true;
                 } catch (Exception e) {
                     Log.i(TAG, "pj_" + count + ":::" + e);
 
@@ -180,21 +171,14 @@ public class Garage_Tab extends Fragment {
         protected String doInBackground(String... params) {
             int count = 0;
             int maxtries = 5;
-            Log.i(TAG, "PJ_distanceMeasure");
-            Log.i(TAG, "poolgarageaktuate " + poolGarageAktuateOk);
-            while (!poolGarageDistanceOk && count++ < maxtries) {
+
+            while (!garageDistanceOk && count++ < maxtries) {
                 try {
-                    Log.i(TAG, "PJ_while");
+
                     ipcon_distance.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
-
-
-                    //ipcon_garage.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
-                    dus.setDistanceCallbackPeriod(200);
-                    Log.i(TAG, "PJ_setDistanceCallPer");
-
-
-                    //ipcon_garage.disconnect();
-                    poolGarageDistanceOk = true;
+                    distance = dus.getDistanceValue();
+                    ipcon_distance.disconnect();
+                    garageDistanceOk = true;
                 } catch (Exception e) {
                     Log.i(TAG, "pj_" + count + ":::" + e);
 
@@ -208,15 +192,15 @@ public class Garage_Tab extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            dus.addDistanceListener(new BrickletDistanceUS.DistanceListener() {
-                public void distance(int distance) {
-                    tvDistance.setText(distance);
-                }
-            });
-
+            tvDistance.setText("Entfernung: " + distance);
+            if (isTimerRunning){
+                setStatusRunning();
+            } else {
+                setStatus();
+            }
 
             if (errorCode == 1){
-                functions.showMsg("Fehler", "Verbindung konnte nicht hergestellt werden!", true, getActivity());
+                functions.showMsg("Fehler", "Verbindung konnte nicht hergestellt werden11!", true, getActivity());
             }
 
 
@@ -228,9 +212,28 @@ public class Garage_Tab extends Fragment {
 
         @Override
         protected void onProgressUpdate(Void... values) {
+
         }
     }
 
+private void setStatus(){
+    if (distance < 1400){
+        tvStatus.setText("Tor geöffnet");
+    } else if (distance > 2000){
+        tvStatus.setText("Tor geschlossen");
+    } else {
+        tvStatus.setText("Tor teilweise geöffnet");
+    }
+}
+    private void setStatusRunning(){
+        if (distance < 1400){
+            tvStatus.setText("Tor geöffnet");
+        } else if (distance > 2000){
+            tvStatus.setText("Tor geschlossen");
+        } else {
+            tvStatus.setText("Tor in Bewegung");
+        }
+    }
 
 
 }

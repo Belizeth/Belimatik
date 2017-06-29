@@ -11,4 +11,6 @@
     <string name="imgBtnLightOn">Licht an</string>
     <string name="imgBtnLightOff">Licht aus</string>
     <string name="imgBtnLightNextColor">Licht naächste Farbe</string>
+    <string name="labelOpenGarage">Aktor Garage</string>
+    <string name="LabelCheckDistance">Prüfe Tor</string>
 </resources>
