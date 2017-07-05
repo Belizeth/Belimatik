@@ -201,7 +201,7 @@ public class Garage_Tab extends Fragment {
         @Override
         protected void onPostExecute(String result) {
             tvDistance_first.setText("Entfernung 1: " + distance_first);
-            tvDistance_second.setText("Entfernung 2: " + tvDistance_second);
+            tvDistance_second.setText("Entfernung 2: " + distance_second);
 
             if (isTimerRunning){
                 setStatusRunning();
