@@ -23,14 +23,14 @@
         android:layout_marginStart="59dp" />
 
     <TextView
-        android:id="@+id/tvDistance"
+        android:id="@+id/tvDistance_first"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentTop="true"
         android:text="TextView"
         android:textColor="@android:color/white"
-        android:textSize="12sp" />
+        android:textSize="12sp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true" />
 
     <TextView
         android:id="@+id/tvStatus"
@@ -86,6 +86,16 @@
         android:layout_centerVertical="true"
         android:indeterminateTint="@android:color/white"
         android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvDistance_second"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignStart="@+id/tvDistance_first"
+        android:layout_below="@+id/tvDistance_first"
+        android:text="TextView"
+        android:textColor="@android:color/white"
+        android:textSize="12sp" />
 
 
 </RelativeLayout>

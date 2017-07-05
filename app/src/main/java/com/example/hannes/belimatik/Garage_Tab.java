@@ -28,11 +28,14 @@ public class Garage_Tab extends Fragment {
     private IPConnection ipcon_garage;
     private IPConnection ipcon_distance;
     private BrickletDualRelay dr;
-    private BrickletDistanceUS dus;
+    private BrickletDistanceUS dus_first;
+    private BrickletDistanceUS dus_second;
     private Functions functions = new Functions();
-    private TextView tvDistance;
+    private TextView tvDistance_first;
+    private TextView tvDistance_second;
     private TextView tvStatus;
-    private int distance;
+    private int distance_first;
+    private int distance_second;
     private CountDownTimer cTimer;
     private boolean isTimerRunning = false;
     private ProgressBar garagePB;
@@ -48,8 +51,10 @@ public class Garage_Tab extends Fragment {
         ipcon_garage = new IPConnection();
         ipcon_distance = new IPConnection();
         dr = new BrickletDualRelay(getString(R.string.uid_garage_dual_relay), ipcon_garage);
-        dus = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_US), ipcon_distance);
-        tvDistance = (TextView) rootView.findViewById(R.id.tvDistance);
+        dus_first = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_first_US), ipcon_distance);
+        dus_second = new BrickletDistanceUS(getString(R.string.uid_garage_Distance_second_US), ipcon_distance);
+        tvDistance_first = (TextView) rootView.findViewById(R.id.tvDistance_first);
+        tvDistance_second = (TextView) rootView.findViewById(R.id.tvDistance_second);
         tvStatus = (TextView) rootView.findViewById(R.id.tvStatus);
         garagePB = (ProgressBar) rootView.findViewById(R.id.garageProgressBar);
 
@@ -60,7 +65,8 @@ public class Garage_Tab extends Fragment {
         btnCheckDistance.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                tvDistance.setText("Messung läuft");
+                tvDistance_first.setText("Messung läuft");
+                tvDistance_second.setText("Messung läuft");
                 tvStatus.setText("Messung läuft");
                 new DistanceMeasure().execute("");
                 garageDistanceOk = false;
@@ -81,7 +87,8 @@ public class Garage_Tab extends Fragment {
                     garageAktuateOk = false;
                     new DistanceMeasure().execute("");
                     garageDistanceOk = false;
-                    tvDistance.setText("Distance " + distance);
+                    tvDistance_first.setText("Distance " + distance_first);
+                    tvDistance_second.setText("Distance " + distance_second);
                     tvStatus.setText("Unterbrochen");
 
                     garagePB.setVisibility(View.GONE);
@@ -105,7 +112,7 @@ public class Garage_Tab extends Fragment {
                         isTimerRunning = false;
                         new DistanceMeasure().execute("");
                         garageDistanceOk = false;
-                        Log.i(TAG, "PJ_stopdist: " + distance);
+                        Log.i(TAG, "PJ_distance_first: " + distance_first + "PJ_distance_second: " + distance_second);
 
                         isTimerRunning = false;
                         garagePB.setVisibility(View.GONE);
@@ -176,7 +183,8 @@ public class Garage_Tab extends Fragment {
                 try {
 
                     ipcon_distance.connect(getString(R.string.host_Garage), getContext().getResources().getInteger(R.integer.port_garage));
-                    distance = dus.getDistanceValue();
+                    distance_first = dus_first.getDistanceValue();
+                    distance_second = dus_second.getDistanceValue();
                     ipcon_distance.disconnect();
                     garageDistanceOk = true;
                 } catch (Exception e) {
@@ -192,7 +200,9 @@ public class Garage_Tab extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            tvDistance.setText("Entfernung: " + distance);
+            tvDistance_first.setText("Entfernung 1: " + distance_first);
+            tvDistance_second.setText("Entfernung 2: " + tvDistance_second);
+
             if (isTimerRunning){
                 setStatusRunning();
             } else {
@@ -217,23 +227,25 @@ public class Garage_Tab extends Fragment {
     }
 
 private void setStatus(){
-    if (distance < 1400){
+    if (distance_first < 1000 && distance_second < 1000){
         tvStatus.setText("Tor geöffnet");
-    } else if (distance > 2000){
+    } else if (distance_first > 1000 && distance_second > 1000){
         tvStatus.setText("Tor geschlossen");
-    } else {
+    } else if (distance_first < 1000 && distance_second > 1000){
         tvStatus.setText("Tor teilweise geöffnet");
+    } else {
+        tvStatus.setText("Tor status undefiniert");
     }
 }
     private void setStatusRunning(){
-        if (distance < 1400){
+        if (distance_first < 1000 && distance_second < 1000){
             tvStatus.setText("Tor geöffnet");
-        } else if (distance > 2000){
+        } else if (distance_first > 1000 && distance_second > 1000){
             tvStatus.setText("Tor geschlossen");
-        } else {
+        } else if (distance_first < 1000 && distance_second > 1000){
             tvStatus.setText("Tor in Bewegung");
+        } else {
+            tvStatus.setText("Tor status undefiniert");
         }
     }
-
-
 }

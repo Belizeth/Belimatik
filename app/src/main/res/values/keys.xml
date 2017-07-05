@@ -15,5 +15,6 @@
     <string name="uid_pool_rs">nWL</string>
     <string name="uid_pool_water_ablauf">yX8</string>
     <string name="uid_garage_dual_relay">rMz</string>
-    <string name="uid_garage_Distance_US">nZJ</string>
+    <string name="uid_garage_Distance_first_US">nZJ</string>
+    <string name="uid_garage_Distance_second_US">zqr</string>
 </resources>
