@@ -152,7 +152,7 @@ public class Pool_Tab extends Fragment {
                         break;
                     case "NextColor":
                         rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_OFF);
-                        Thread.sleep(600);
+                        Thread.sleep(700);
                         rs.switchSocketB((short) 1, (short) 2, BrickletRemoteSwitch.SWITCH_TO_ON);
                         break;
                     }

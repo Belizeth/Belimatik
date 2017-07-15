@@ -101,7 +101,7 @@ public class Garage_Tab extends Fragment {
 
                 //tvDistance.setText("Tor läuft");
                 isTimerRunning = true;
-                cTimer = new CountDownTimer(10000, 1000) {
+                cTimer = new CountDownTimer(30000, 1000) {
                     public void onTick(long millisUntilFinished) {
                         Log.i(TAG, "PJ_tinmer: " + millisUntilFinished / 1000);
 
