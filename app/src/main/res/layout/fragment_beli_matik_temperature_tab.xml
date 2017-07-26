@@ -9,14 +9,11 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.example.hannes.belimatik.BeliMatikActivity">
 
-    <TextView
-        android:id="@+id/tvIndoorTemp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="73dp"
-        android:text="Zzzzz"
-        android:textSize="24sp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+    <ListView
+        android:id="@+id/NetatmoList"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true" />
 
 </RelativeLayout>
